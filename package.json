@@ -1,0 +1,23 @@
+{
+  "name": "project",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "gulp dev",
+    "build": "npm i && gulp build"
+  },
+  "author": "Isabella Broch",
+  "license": "ISC",
+  "dependencies": {
+    "autoprefixer": "^9.7.4",
+    "gulp": "^4.0.2",
+    "gulp-connect": "^5.7.0",
+    "gulp-ejs": "^5.0.0",
+    "gulp-imagemin": "^7.1.0",
+    "gulp-open": "^3.0.1",
+    "gulp-postcss": "^8.0.0",
+    "gulp-rename": "^2.0.0",
+    "gulp-sass": "^4.0.2",
+    "node-sass": "^4.13.1",
+    "postcss-pxtorem": "^4.0.1"
+  }
+}
