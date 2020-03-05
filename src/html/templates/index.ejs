@@ -1,5 +1,15 @@
 <%- include('../partials/doc-start', {title: 'Default Template'}) %>
 
-...
+<div class="labels">
+  <button class="labels__create">Create Lighting</button>
+  <ul class="labels__list">
+    <li class="labels__item item">
+      <input name="name" class="item__name" value="Name" />
+      <input type="color" name="color" class="item__color" />
+    </li>
+  </ul>
+</div>
+
+<ul class="periods"></ul>
 
 <%- include('../partials/doc-end') %>
