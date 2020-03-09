@@ -1,0 +1,52 @@
+.labels {
+  margin: 0.5em;
+  border: 1px solid darkgray;
+  background: #eeeeee;
+  padding: 0.5em;
+  display: flex;
+  flex-direction: column;
+  min-width: 250px;
+}
+
+.item {
+  display: flex;
+  margin: 0.5em 0;
+  align-items: center;
+  line-height: 1.5;
+
+  > *:not(:first-child) {
+    margin-left: 0.5em;
+  }
+
+  &__name {
+    flex: 1;
+    min-width: 0;
+    padding: 0 0.25em;
+    line-height: inherit;
+  }
+
+  &__delete {
+    line-height: inherit;
+    padding: 0 5px;
+  }
+
+  &__color {
+    flex-shrink: 0;
+    width: 2em;
+    height: 2em;
+    border-radius: 100%;
+    border-style: solid;
+
+    &::-webkit-color-swatch-wrapper {
+      padding: 0;
+    }
+
+    &::-moz-color-swatch {
+      border-radius: 100%;
+    }
+
+    &::-webkit-color-swatch {
+      border-radius: 100%;
+    }
+  }
+}

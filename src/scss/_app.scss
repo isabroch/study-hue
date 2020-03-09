@@ -1,0 +1,15 @@
+.app {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+/* Sections in regards to App Placement */
+.labels {
+  min-width: 200px;
+  flex: 1;
+}
+
+.periods {
+  min-width: 400px;
+  flex: 1;
+}

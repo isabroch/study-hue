@@ -1,15 +1,24 @@
 <%- include('../partials/doc-start', {title: 'Default Template'}) %>
+<main class="app">
+  <div class="labels">
+    <button class="labels__create">Create Lighting</button>
+    <ul class="labels__list">
+      <li class="labels__item item">
+        <button class="item__delete">X</button>
+        <input name="name" class="item__name" placeholder="Name" />
+        <input type="color" name="color" class="item__color" value="" />
+      </li>
+    </ul>
+  </div>
 
-<div class="labels">
-  <button class="labels__create">Create Lighting</button>
-  <ul class="labels__list">
-    <li class="labels__item item">
-      <input name="name" class="item__name" value="Name" />
-      <input type="color" name="color" class="item__color" />
-    </li>
-  </ul>
-</div>
+  <ul class="periods"></ul>
+</main>
 
-<ul class="periods"></ul>
-
+<template id="labels__item">
+  <li class="labels__item item">
+    <button class="item__delete">X</button>
+    <input name="name" class="item__name" placeholder="Name" />
+    <input type="color" name="color" class="item__color" value="#484835" />
+  </li>
+</template>
 <%- include('../partials/doc-end') %>

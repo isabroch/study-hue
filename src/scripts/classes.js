@@ -1,7 +1,8 @@
 class LightLabel {
-  constructor(name, xy) {
+  constructor(name, xy, brightness) {
     this.name = name;
-    this.xy = xy;
+    this.brightness = brightness;
+    this.color = xy;
   }
 }
 

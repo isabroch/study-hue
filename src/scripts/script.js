@@ -1,30 +1,85 @@
 import * as api from "./api.js";
 import * as create from "./classes.js";
+// import * as labelStorage from "./storage.js";
 
-const labels = [];
+function labels() {
+  const labels = [];
 
-const el = {
-  color: document.querySelector(".item__color"),
-  name: document.querySelector(".item__name")
-};
+  const labelsContainer = document.querySelector(".labels__list");
 
-el.color.addEventListener("change", (e) => {
-  changeLabel(0);
-});
+  const labelCreationButton = document.querySelector(".labels__create");
+  labelCreationButton.addEventListener("click", function() {
+    const template = document
+      .querySelector("#labels__item")
+      .content.cloneNode(true);
+    labelsContainer.appendChild(template);
+  });
 
-el.name.addEventListener("change", (e) => {
-  changeLabel(0);
-});
+  labelsContainer.addEventListener("change", function(e) {
+    /* User changes name OR color */
+    if (
+      e.target.classList.contains("item__name") ||
+      e.target.classList.contains("item__color")
+    ) {
+      let item = e.target.parentNode;
+      changeLabel(item, [...labelsContainer.children], labels);
+      e.target.blur();
+    }
+  });
+
+  labelsContainer.addEventListener("click", function(e) {
+    /* User clicks delete */
+    if (e.target.classList.contains("item__delete")) {
+      let item = e.target.parentNode;
+      deleteLabel(item, [...labelsContainer.children], labels);
+    }
+  });
+
+  labelsContainer.addEventListener("focusin", function(e) {
+    if (
+      e.target.classList.contains("item__name") ||
+      e.target.classList.contains("item__color")
+    ) {
+      let item = e.target.parentNode;
+      changeLabel(item, [...labelsContainer.children], labels);
+    }
+  });
+
+  return labels;
+}
+
+labels();
+
+// console.log(labelStorage);
+
+// labelStorage.save("Hello!");
+// labelStorage.load();
+
+function changeLabel(el, elArray, labelsArray) {
+  el.color = el.querySelector(".item__color");
+  el.name = el.querySelector(".item__name");
+  const index = elArray.indexOf(el);
+  const name = el.name.value;
+  const color = getColor(el.color.value);
+  labelsArray[index] = new create.LightLabel(name, color.xy, color.brightness);
+  changeBulbColor(color.xy, color.brightness);
+}
+
+function deleteLabel(el, elArray, labelsArray) {
+  const i = elArray.indexOf(el);
+  labelsArray.splice(i, 1);
+  el.parentNode.removeChild(el);
+}
 
 function getColor(hex) {
-  /* SEE: https://github.com/sqmk/Phue/blob/master/library/Phue/Helper/ColorConversion.php */
+  /* SEE: https://developers.meethue.com/develop/application-design-guidance/color-conversion-formulas-rgb-to-xy-and-back/ */
 
   const search = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
 
   const rgb = {
-    r: parseInt(search[1], 16),
-    g: parseInt(search[2], 16),
-    b: parseInt(search[3], 16)
+    r: parseInt(search[1], 16) / 255,
+    g: parseInt(search[2], 16) / 255,
+    b: parseInt(search[3], 16) / 255
   };
 
   const gammaRGB = {
@@ -43,14 +98,14 @@ function getColor(hex) {
   };
 
   const xyz = {
-    x: gammaRGB.r * 0.664511 + gammaRGB.g * 0.154324 + gammaRGB.b * 0.162028,
-    y: gammaRGB.r * 0.283881 + gammaRGB.g * 0.668433 + gammaRGB.b * 0.047685,
-    z: gammaRGB.r * 0.000088 + gammaRGB.g * 0.07231 + gammaRGB.b * 0.986039
+    x: gammaRGB.r * 0.649926 + gammaRGB.g * 0.103455 + gammaRGB.b * 0.197109,
+    y: gammaRGB.r * 0.234327 + gammaRGB.g * 0.743075 + gammaRGB.b * 0.022598,
+    z: gammaRGB.r * 0.0 + gammaRGB.g * 0.053077 + gammaRGB.b * 1.035763
   };
 
   const xy = {
-    x: (xyz.x / (xyz.x + xyz.y + xyz.z)).toFixed(4),
-    y: (xyz.y / (xyz.x + xyz.y + xyz.z)).toFixed(4)
+    x: parseFloat((xyz.x / (xyz.x + xyz.y + xyz.z)).toFixed(4)),
+    y: parseFloat((xyz.y / (xyz.x + xyz.y + xyz.z)).toFixed(4))
   };
 
   if (isNaN(xy.x)) {
@@ -60,22 +115,27 @@ function getColor(hex) {
     xy.y = 0;
   }
 
+  const brightness = (() => {
+    let value = xyz.y * 255;
+    value = value.toFixed(0);
+    value = parseFloat(value);
+    value = value * 2;
+    value = value > 255 ? 255 : value;
+
+    return value;
+  })();
+
   return {
     rgb: [rgb.r, rgb.g, rgb.b],
-    xy: [parseFloat(xy.x), parseFloat(xy.y)]
+    xy: [xy.x, xy.y],
+    brightness: brightness
   };
 }
 
-async function changeColor(color) {
-  const response = await api.put("/lights/10/state", { xy: color });
-  console.log(response);
+async function changeBulbColor(color, brightness) {
+  const response = await api.put("/lights/10/state", {
+    xy: color,
+    bri: brightness
+  });
   return response;
-}
-
-function changeLabel(num) {
-  const name = el.name.value;
-  const color = getColor(el.color.value);
-  labels[num] = new create.LightLabel(name, color.xy);
-  console.log(labels);
-  changeColor(color.xy);
 }
