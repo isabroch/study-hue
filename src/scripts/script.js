@@ -1,6 +1,6 @@
 import * as api from "./api.js";
 import * as create from "./classes.js";
-// import * as labelStorage from "./storage.js";
+import * as labelStorage from "./storage.js";
 
 function labels() {
   const labels = [];
@@ -50,10 +50,10 @@ function labels() {
 
 labels();
 
-// console.log(labelStorage);
+console.log(labelStorage);
 
-// labelStorage.save("Hello!");
-// labelStorage.load();
+labelStorage.save("Hello!");
+labelStorage.load();
 
 function changeLabel(el, elArray, labelsArray) {
   el.color = el.querySelector(".item__color");
